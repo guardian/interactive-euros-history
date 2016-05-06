@@ -1,0 +1,29 @@
+.node rect {
+  // cursor: move;
+  fill: rgb(66,66,66);
+  fill-opacity: .9;
+  shape-rendering: auto;
+
+  rx:1;
+  ry:1;
+}
+
+.node text {
+ @include fs-textSans(1);
+        font-size: 9px;
+        text-transform: uppercase;	
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
+  // visibility: hidden;
+}
+
+.link {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .2;
+}
+
+.link:hover {
+  stroke-opacity: .5;
+
+}
