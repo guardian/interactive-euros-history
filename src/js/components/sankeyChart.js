@@ -1,12 +1,13 @@
 import Tooltip from './Tooltip'
 import chartHTML from './templates/chart.html!text'
-var width = 300, height = 140;
+var width = 300, height = 400;
+var dataArr;
+
 
 export default function sankeyChart(d3, options, margin, rData) {
 	
 				var dataVals = options.dataObj;
-
-        //console.log(options.year, rData);
+        dataArr = getDataArr(options.year, rData);
 
 				var container=d3.select(options.container)
 					.append("div")
@@ -37,7 +38,7 @@ export default function sankeyChart(d3, options, margin, rData) {
               sankey
                   .nodes(dataVals.nodes)
                   .links(dataVals.links)
-                  .layout(32);
+                  .layout(120);
 
               var link = svg.append("g").selectAll(".link")
                   .data(dataVals.links)
@@ -55,6 +56,8 @@ export default function sankeyChart(d3, options, margin, rData) {
                 .enter().append("g")
                   .attr("class", "node")
                   .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+
+              //console.log(nodeData)
                 // .call(d3.behavior.drag()
                 //   .origin(function(d) { return d; })
                 //   .on("dragstart", function() { this.parentNode.appendChild(this); })
@@ -68,7 +71,7 @@ export default function sankeyChart(d3, options, margin, rData) {
                   //.style("fill", function(d) { return d.color = color(d.name.replace(/ .*/, "")); })
                   //.style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
                 .append("title")
-                  .text(function(d) { return d.name + " " + format(d.value); });// \n
+                  .text(function(d) { return d.name });// \n+ " " + format(d.value); 
 
               node.append("text")
                   .attr("x", -6)
@@ -76,7 +79,7 @@ export default function sankeyChart(d3, options, margin, rData) {
                   .attr("dy", ".35em")
                   .attr("text-anchor", "end")
                   .attr("transform", null)
-                  .text(function(d) { return d.name; })
+                  .text(function(d) { var nodeData = getNodeData(d.name); console.log(nodeData); return nodeData.matchRound; })
                 .filter(function(d) { return d.x < width / 2; })
                   .attr("x", 6 + sankey.nodeWidth())
                   .attr("text-anchor", "start");
@@ -91,6 +94,29 @@ export default function sankeyChart(d3, options, margin, rData) {
 
   }
 
+
+function getDataArr(y,rData){
+  var a;
+
+      _.forEach(rData, function(subArr,k){
+              if(y == k){
+                a = subArr;
+              }
+      });
+
+  return a;
+}
+
+function getNodeData(n){
+  var obj;
+
+    _.forEach(dataArr, function(o){
+        if (n == o.source){ obj = o }
+    })
+
+  return obj;
+
+}
 
 
 
@@ -405,26 +431,6 @@ export default function sankeyChart(d3, options, margin, rData) {
 };
 
 
-
-
-
-// {
-// "nodes":[
-//     {"node":0,"name":"node0"},
-//     {"node":1,"name":"node1"},
-//     {"node":2,"name":"node2"},
-//     {"node":3,"name":"node3"},
-//     {"node":4,"name":"node4"}
-// ],
-// "links":[
-//     {"source":0,"target":2,"value":2},
-//     {"source":1,"target":2,"value":2},
-//     {"source":1,"target":3,"value":2},
-//     {"source":0,"target":4,"value":2},
-//     {"source":2,"target":3,"value":2},
-//     {"source":2,"target":4,"value":2},
-//     {"source":3,"target":4,"value":4}
-// ]}
 
 
 

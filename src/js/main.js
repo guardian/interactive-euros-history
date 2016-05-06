@@ -42,6 +42,7 @@ function dataInit(resp){
 
     rData = resp.sheets.Sheet1;
 
+
     rData = _.remove(rData, function(d) {
           return d.Date != '';
         });
@@ -58,13 +59,16 @@ function dataInit(resp){
         d.groupRound = Number(d.groupRound)
 
         d.notes = String(d.MatchNotes1 +' '+ d.MatchNotes2 +' '+ d.MatchNotes3 +' '+ d.MatchNotes4 +' '+ d.MatchNotes5 +' '+ d.MatchNotes6 +' '+ d.MatchNotes7 +' '+ d.MatchNotes8 +' '+ d.MatchNotes9 +' '+ d.MatchNotes10 +' '+ d.MatchNotes11 +' '+ d.MatchNotes12 +' '+ d.MatchNotes13 +' '+ d.MatchNotes14 +' '+ d.MatchNotes15 +' '+ d.MatchNotes16);
-        delete d.MatchNotes1; delete d.MatchNotes2; delete d.MatchNotes3; delete d.MatchNotes4; delete d.MatchNotes5; delete d.MatchNotes6; delete d.MatchNotes7; delete d.MatchNotes8; delete d.MatchNotes9;  delete d.MatchNotes10; delete d.MatchNotes11;  delete d.MatchNotes12;  delete d.MatchNotes13;  delete d.MatchNotes14;  delete d.MatchNotes15;  delete d.MatchNotes16;
+        //delete d.MatchNotes1; delete d.MatchNotes2; delete d.MatchNotes3; delete d.MatchNotes4; delete d.MatchNotes5; delete d.MatchNotes6; delete d.MatchNotes7; delete d.MatchNotes8; delete d.MatchNotes9;  delete d.MatchNotes10; delete d.MatchNotes11;  delete d.MatchNotes12;  delete d.MatchNotes13;  delete d.MatchNotes14;  delete d.MatchNotes15;  delete d.MatchNotes16;
         valueFields.push(d.tourney) 
 
     })
 
     valueFields = _.uniq(valueFields); //create an array of tourney years
     rData = _.groupBy(rData, function(d) { return d.tourney});
+
+    console.log(rData)
+    //rData = rData.reverse();
 
     // work out teams that progress and handle first 2 rounds of groups
     _.forEach(rData, function(a,k){
@@ -98,7 +102,9 @@ function dataInit(resp){
          })
 
     }) 
- 
+    
+
+
     getDataObj(rData)
     
 }
@@ -115,14 +121,14 @@ function getTargetMatch(a,currObj){
                 if ( !currObj.groupRound && nextObj.round == (currObj.round +1) && nextObj.Away == currObj.winner ){ s = nextObj.source }; 
 
                 //handle round 3 of group games
-                if( currObj.groupRound && currObj.winner != "groupGame" && currObj.winner==nextObj.Home ) { s = nextObj.source }
-                if( currObj.groupRound && currObj.winner != "groupGame" && currObj.winner==nextObj.Away ) { s = nextObj.source }
+                if( currObj.groupRound && currObj.winner != "groupGame" && currObj.winner==nextObj.Home ) { s = nextObj.source };
+                if( currObj.groupRound && currObj.winner != "groupGame" && currObj.winner==nextObj.Away ) { s = nextObj.source };
 
                 //handle round 2 of group games
-                // if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Home==nextObj.Home ) { s = nextObj.source }
-                // if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Home==nextObj.Away ) { s = nextObj.source }
-                // if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Away==nextObj.Home ) { s = nextObj.source }
-                // if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Away==nextObj.Away ) { s = nextObj.source }  
+                if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Home==nextObj.Home ) { s = nextObj.source };
+                if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Home==nextObj.Away ) { s = nextObj.source };
+                if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Away==nextObj.Home ) { s = nextObj.source };
+                if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Away==nextObj.Away ) { s = nextObj.source };  
 
                 //handle round 1 of group games
                 // if( currObj.groupRound==1 && nextObj.groupRound==2 && currObj.Home==nextObj.Home ) { s = nextObj.source }
