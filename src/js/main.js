@@ -93,12 +93,12 @@ function dataInit(resp){
     _.forEach(rData, function(a,k){
         
          _.forEach(a, function (d,k){
-            if(d.matchRound!="Final" && d.winner!="groupGame"){  d.target = getTargetMatch(a,d); }; //console.log(d.target) console.log(d.round+" none final game");
-            if(d.winner=="groupGame"){ d.target = getTargetMatch(a,d); }; //console.log(d.matchRound, " handle group game and handle round of 16 here --- "+d)
-            if(d.matchRound=="Final"){ delete d.target; };         
-            if(d.matchRound=="Third place"){ delete d.target; }; 
+            if( d.matchRound!="Final" && d.winner!="groupGame" ){  d.target = getTargetMatch(a,d); }; //console.log(d.target) console.log(d.round+" none final game");
+            if( d.winner=="groupGame" ){ d.target = getTargetMatch(a,d); }; //console.log(d.matchRound, " handle group game and handle round of 16 here --- "+d)
+            if( d.matchRound=="Final" ){ delete d.target; };         
+            if( d.matchRound=="Third place" ){ delete d.target; }; 
 
-            if(d.winner=="groupGame"){ console.log(d.groupRound) }      
+            if( d.winner=="groupGame" ){ console.log(d.groupRound) }      
          })
 
     }) 
@@ -126,16 +126,19 @@ function getTargetMatch(a,currObj){
                      s = nextObj.source 
                 };
                 
-                //handle round 2 of group games -- not working
-                if( currObj.round == 2  && nextObj.round == 3 ){  // && (currObj.winner==nextObj.Home)&& || currObj.winner==nextObj.Away (currObj.winner==nextObj.Home || currObj.winner==nextObj.Away)
-                    console.log(currObj)
+                //handle round 2 of group games -- tested OK
+                if( currObj.round == 2  && nextObj.round == 3 && ((currObj.Home==nextObj.Home || currObj.Home==nextObj.Away ) || (currObj.Away==nextObj.Home || currObj.Away==nextObj.Away)) ){  // && (currObj.winner==nextObj.Home)&& || currObj.winner==nextObj.Away (currObj.winner==nextObj.Home || currObj.winner==nextObj.Away)
+                    
                     s = nextObj.source 
+                    
                 };
 
-                //handle round 2 of group games - tested OK
-                if( currObj.round == 1  && nextObj.round == 2 && (currObj.winner==nextObj.Home || currObj.winner==nextObj.Away)){ 
+                //handle round 1 of group games -- tested OK
+                if( currObj.round == 1  && nextObj.round == 2 && ((currObj.Home==nextObj.Home || currObj.Home==nextObj.Away ) || (currObj.Away==nextObj.Home || currObj.Away==nextObj.Away)) ){ 
                     //console.log(s)
-                    s = nextObj.source 
+                    s = nextObj.source
+                    console.log(s)
+
                 };
 
                 // //handle round 2 of group games
@@ -239,6 +242,8 @@ function getWDL(d){
 function getRound(d){
 
     var t = 1;
+
+    d.tourney = Number(d.tourney);
     
         if(d.groupRound ){ 
             t = Number(d.groupRound) 
@@ -249,13 +254,13 @@ function getRound(d){
             if (d.matchRound=="Final"){ t = 4 }   
         }
 
-        if(d.tourney > 1980 && d.tourney < 94 ) {
+        if(d.tourney > 1980 && d.tourney < 1994 ) {
             //No Quarter-finals - group winners straight to semi 84-92
             if (d.matchRound=="Semi-finals"){ t = 4 }  
             if (d.matchRound=="Final"){ t = 5 }    
         }
 
-        if(d.tourney < 1984 && d.tourney > 92 )   
+        if(d.tourney < 1984 || d.tourney > 1992 )   
         {
             if (d.matchRound=="Round of 16") { t = 3 }
             if (d.matchRound=="Quarter-finals"){ t = 4 }
@@ -263,6 +268,8 @@ function getRound(d){
             if (d.matchRound=="Semi-finals"){ t = 5 }  
             if (d.matchRound=="Final"){ t = 6 }   
         } 
+        
+
 
     return t
 }
