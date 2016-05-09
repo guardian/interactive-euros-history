@@ -79,7 +79,7 @@ export default function sankeyChart(d3, options, margin, rData) {
                   .attr("dy", ".35em")
                   .attr("text-anchor", "end")
                   .attr("transform", null)
-                  .text(function(d) { var nodeData = getNodeData(d.name); console.log(nodeData); return nodeData.matchRound; })
+                  .text(function(d) { var nodeData = getNodeData(d.name); return nodeData.matchRound; }) //console.log(nodeData); 
                 .filter(function(d) { return d.x < width / 2; })
                   .attr("x", 6 + sankey.nodeWidth())
                   .attr("text-anchor", "start");

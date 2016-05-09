@@ -1,5 +1,5 @@
 Top priority
-1. tournaments with group stage not resolved see functions getTargetMatch() and getRound() in main.js
+1. tournaments with group stage not resolved see functions getTargetMatch() and getRound() in main.js -- look at simplifying conditionals in these functions.
 2. 1964-1968 2 legged quarter finals causing probs
 3. drop 3rd place matches
 4. reverse order so 2012 games appear first?

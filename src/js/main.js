@@ -42,7 +42,6 @@ function dataInit(resp){
 
     rData = resp.sheets.Sheet1;
 
-
     rData = _.remove(rData, function(d) {
           return d.Date != '';
         });
@@ -94,15 +93,16 @@ function dataInit(resp){
     _.forEach(rData, function(a,k){
         
          _.forEach(a, function (d,k){
-
             if(d.matchRound!="Final" && d.winner!="groupGame"){  d.target = getTargetMatch(a,d); }; //console.log(d.target) console.log(d.round+" none final game");
             if(d.winner=="groupGame"){ d.target = getTargetMatch(a,d); }; //console.log(d.matchRound, " handle group game and handle round of 16 here --- "+d)
             if(d.matchRound=="Final"){ delete d.target; };         
+            if(d.matchRound=="Third place"){ delete d.target; }; 
 
+            if(d.winner=="groupGame"){ console.log(d.groupRound) }      
          })
 
     }) 
-    
+
 
 
     getDataObj(rData)
@@ -117,18 +117,32 @@ function getTargetMatch(a,currObj){
             _.forEach(a, function(nextObj){
 
                 // handle ko matches
-                if ( !currObj.groupRound && nextObj.round == (currObj.round +1) && nextObj.Home == currObj.winner ){ s = nextObj.source };
-                if ( !currObj.groupRound && nextObj.round == (currObj.round +1) && nextObj.Away == currObj.winner ){ s = nextObj.source }; 
+                if ( !currObj.groupRound && nextObj.round == (currObj.round +1) && (nextObj.Home == currObj.winner || nextObj.Away == currObj.winner )){ 
+                    s = nextObj.source 
+                };
 
-                //handle round 3 of group games
-                if( currObj.groupRound && currObj.winner != "groupGame" && currObj.winner==nextObj.Home ) { s = nextObj.source };
-                if( currObj.groupRound && currObj.winner != "groupGame" && currObj.winner==nextObj.Away ) { s = nextObj.source };
+                //handle round 3 of group games -- tested ok
+                if( currObj.round == 3  && nextObj.round == 4 && (currObj.winner==nextObj.Home || currObj.winner==nextObj.Away)){ 
+                     s = nextObj.source 
+                };
+                
+                //handle round 2 of group games -- not working
+                if( currObj.round == 2  && nextObj.round == 3 ){  // && (currObj.winner==nextObj.Home)&& || currObj.winner==nextObj.Away (currObj.winner==nextObj.Home || currObj.winner==nextObj.Away)
+                    console.log(currObj)
+                    s = nextObj.source 
+                };
 
-                //handle round 2 of group games
-                if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Home==nextObj.Home ) { s = nextObj.source };
-                if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Home==nextObj.Away ) { s = nextObj.source };
-                if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Away==nextObj.Home ) { s = nextObj.source };
-                if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Away==nextObj.Away ) { s = nextObj.source };  
+                //handle round 2 of group games - tested OK
+                if( currObj.round == 1  && nextObj.round == 2 && (currObj.winner==nextObj.Home || currObj.winner==nextObj.Away)){ 
+                    //console.log(s)
+                    s = nextObj.source 
+                };
+
+                // //handle round 2 of group games
+                // if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Home==nextObj.Home ) { s = nextObj.source };
+                // if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Home==nextObj.Away ) { s = nextObj.source };
+                // if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Away==nextObj.Home ) { s = nextObj.source };
+                // if( currObj.groupRound==2 && nextObj.groupRound==3 && currObj.Away==nextObj.Away ) { s = nextObj.source };  
 
                 //handle round 1 of group games
                 // if( currObj.groupRound==1 && nextObj.groupRound==2 && currObj.Home==nextObj.Home ) { s = nextObj.source }
@@ -191,6 +205,7 @@ function getDataObj(rData){
 
 
 function addCharts(_root,chartRef){
+
         var options = {}
         options.container = "#chartHolder";
         options.chartContainer = "chart_"+chartRef;
@@ -206,15 +221,18 @@ function checkNum(n){
     if(isNaN(n)) { n = 0 }
     
     return n
+
 }
 
 function getWDL(d){
+
     var s = "D";
 
         if (d.homeGoals > d.awayGoals){ s = "H" }
         if (d.homeGoals < d.awayGoals){ s = "A" }
     
-    return s;    
+    return s;  
+
 }
 
 
